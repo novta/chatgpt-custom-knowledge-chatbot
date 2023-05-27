@@ -1,0 +1,13 @@
+Wisentic
+Wisentic offers configurable online services to the insurance industry, with the goal to provide the end customers an easier insurance handling process, reducing the administration with the insurance companies. Wisentic is operating in Sweden and Norway and handles more than 250000 claims/applications yearly.
+ABOUT
+Wisentic, with a long company tradition, started off digitalising their business many years ago, once again sat down and outlined the vision for the future, assuring they would meet and exceed the needs of the business landscape of tomorrow.
+One such big technological leap was to migrate the older system (based on PHP) to a more versatile .NET CORE and Angular based solution, that would enable Wisentic to migrate to a microservice based architecture deployed on Azure cloud. This shift is an instrumental enabler for Wisentic to continue to introduce new products and services at a rapid pace.
+Northprim is a long term trusted partner, with a dedicated team since 2019, is working side by side with excellent Wisentic Solution Architects and Product Owners, sprint after sprint, month after month, year after year – always there to support Wisentic and their clients.
+Northprim is delivering it’s development services from Belgrade and the results include:
+Development of new products (new business areas)
+Migration of legacy code to a modern microservice architecture based on .NET core, Angular and Azure frameworks using the Controller/Business/Repository pattern
+Migration to Azure Cloud, implementing infrastructure as a code 
+Setup of deployment pipelines for automatic deployment
+Swagger setup 
+Upgrading the Wicentic Mobile app to the latest version of the Ionic Framework

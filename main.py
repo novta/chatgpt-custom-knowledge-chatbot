@@ -1,9 +1,9 @@
 import os
 import importlib
-
+from apikey import apikey 
 
 # Store API key in environment variable
-os.environ['OPENAI_API_KEY'] = 'YOUR_OPENAI_API_KEY'
+os.environ['OPENAI_API_KEY'] = apikey
 
 
 def list_bots():

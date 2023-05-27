@@ -14,7 +14,7 @@ def create_index() -> GPTVectorStoreIndex:
     # Create index from documents
     service_context = ServiceContext.from_defaults(chunk_size_limit=3000)
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
-    # save_index(index)
+    save_index(index)
     return index
 
 
@@ -34,10 +34,10 @@ def load_index() -> GPTVectorStoreIndex:
 
 def query_index(index: GPTVectorStoreIndex):
     # Query index
-    query_engine = index.as_query_engine()
+    # query_engine = index.as_query_engine()
     while True:
         prompt = input("Type prompt...")
-        response = query_engine.query(prompt)
+        response = index.query(prompt)
         print(response)
 
 
