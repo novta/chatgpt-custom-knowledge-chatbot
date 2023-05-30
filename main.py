@@ -1,32 +1,38 @@
 import os
-import importlib
-from apikey import apikey 
+from apikey import apikey
+import streamlit as st
+from app import load_index
 
 # Store API key in environment variable
-os.environ['OPENAI_API_KEY'] = apikey
+os.environ["OPENAI_API_KEY"] = apikey
 
+if not hasattr(st.session_state, 'chat'):
+    st.session_state['chat'] = []
 
-def list_bots():
-    bot_files = os.listdir("bots")
-    bots = [os.path.splitext(bot)[0] for bot in bot_files if bot.endswith('.py')]
-    return bots
+index = load_index()
 
+st.title('🦾 Northprim chat bot 🤖')
+prompt_input = st.text_input("Ask me anything")
 
-def choose_bot():
-    bots = list_bots()
-    print("Available bots:")
-    for index, bot in enumerate(bots, 1):
-        print(f"{index}. {bot}")
+def render_chat_history():
+    container_style = "\
+        height: 400px; \
+        overflow: auto; \
+        display: flex; \
+        flex-direction: column-reverse;\
+    "
+    chat_string = "<br>".join(st.session_state['chat'])
+    st.write(f"<div style={container_style}><p>{chat_string}</p></div>", unsafe_allow_html=True)
 
-    choice = int(input("Choose a bot by entering its number: ")) - 1
-    return bots[choice]
+def add_to_chat_history(input, response): 
+    user_question = f"<span style='color: green;'>User: </span><span>{input}</span>"
+    bot_reponse = f"<span style='color: blue;'>Bot: </span><span>{response}</span>"
+    new_chat_value = [user_question, bot_reponse] + st.session_state['chat']
+    st.session_state['chat'] = new_chat_value
 
+if prompt_input:
+    response = index.query(prompt_input)
+    add_to_chat_history(prompt_input, response)
+    print(st.session_state['chat'])
 
-def select_bot():
-    chosen_bot = choose_bot()
-    bot_module = importlib.import_module(f"bots.{chosen_bot}")
-    bot_module.main()
-
-
-if __name__ == "__main__":
-    select_bot()
+render_chat_history()
