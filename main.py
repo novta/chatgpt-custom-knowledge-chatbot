@@ -1,7 +1,8 @@
 import os
-from apikey import apikey
+
+from llama_index import GPTVectorStoreIndex
+from bots.apikey import apikey
 import streamlit as st
-from app import load_index
 
 
 def initialize():
@@ -43,6 +44,15 @@ def add_to_chat_history(input, response):
     bot_reponse = f"<span style='color: blue;'>Bot: </span><span>{response}</span>"
     new_chat_value = [user_question, bot_reponse] + st.session_state["chat"]
     st.session_state["chat"] = new_chat_value
+
+
+def load_index() -> GPTVectorStoreIndex:
+    # Load index from file
+    try:
+        index = GPTVectorStoreIndex.load_from_disk("knowledge/index.json")
+    except FileNotFoundError:
+        st.write("<div style='color: red;'>No knowledge index found</div>")
+    return index
 
 
 def main():
