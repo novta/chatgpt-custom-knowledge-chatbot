@@ -1,6 +1,6 @@
 # Bring in deps
 import os 
-from apikey import apikey 
+from bots.apikey import apikey 
 
 import streamlit as st 
 from langchain.llms import OpenAI
