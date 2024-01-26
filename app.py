@@ -10,6 +10,8 @@ from langchain.memory import ConversationBufferMemory
 from langchain.utilities import WikipediaAPIWrapper 
 
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader, ServiceContext, Document
+from llama_index.readers.web import SimpleWebPageReader
+from llama_index import StorageContext, load_index_from_storage
 
 os.environ['OPENAI_API_KEY'] = apikey
 
@@ -27,20 +29,25 @@ def create_index() -> GPTVectorStoreIndex:
     # Load data
     documents = load_knowledge()
     # Create index from documents
-    service_context = ServiceContext.from_defaults(chunk_size_limit=3000)
-    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
+    # rebuild storage context
+    storage_context = StorageContext.from_defaults(chunk_size_limit=3000, persist_dir='knowledge')
+    # load index
+    index = load_index_from_storage(storage_context)
     save_index(index)
     return index
 
 
 def save_index(index: GPTVectorStoreIndex):
     # Save index to file
-    index.save_to_disk('knowledge/index.json')
+    index.storage_context.persist('knowledge')
 
 def load_index() -> GPTVectorStoreIndex:
     # Load index from file
     try:
-        index = GPTVectorStoreIndex.load_from_disk('knowledge/index.json')
+        # rebuild storage context
+        storage_context = StorageContext.from_defaults(persist_dir='knowledge')
+        # load index
+        index = load_index_from_storage(storage_context)
     except FileNotFoundError:
         index = create_index()
     return index
@@ -48,7 +55,8 @@ def load_index() -> GPTVectorStoreIndex:
 # Show stuff to the screen if there's a prompt
 index = load_index()
 
-if prompt: 
-    response = index.query(prompt)
+if prompt:
+    query_engine = index.as_query_engine()
+    response = query_engine.query(prompt)
     st.write(prompt) 
     st.write(response) 

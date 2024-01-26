@@ -1,9 +1,10 @@
-from llama_index import GPTVectorStoreIndex, SimpleWebPageReader, ServiceContext, Document
-
+from llama_index import GPTVectorStoreIndex, ServiceContext, Document
+from llama_index.readers.web import SimpleWebPageReader
+from llama_index import StorageContext, load_index_from_storage
 
 def load_knowledge() -> list[Document]:
     # Load data from directory
-    urls = ['https://kpenergy.in']
+    urls = ['https://www.areachica.se/']
     documents = SimpleWebPageReader(True).load_data(urls)
     return documents
 
@@ -21,13 +22,16 @@ def create_index() -> GPTVectorStoreIndex:
 
 def save_index(index: GPTVectorStoreIndex):
     # Save index to file
-    index.save_to_disk('knowledge/index.json')
+    index.storage_context.persist('knowledge')
 
 
 def load_index() -> GPTVectorStoreIndex:
     # Load index from file
     try:
-        index = GPTVectorStoreIndex.load_from_disk('knowledge/index.json')
+        # rebuild storage context
+        storage_context = StorageContext.from_defaults(persist_dir='knowledge')
+        # load index
+        index = load_index_from_storage(storage_context)
     except FileNotFoundError:
         index = create_index()
     return index
@@ -38,7 +42,8 @@ def query_index(index: GPTVectorStoreIndex):
     # query_engine = index.as_query_engine()
     while True:
         prompt = input("Type prompt...")
-        response = index.query(prompt)
+        query_engine = index.as_query_engine()
+        response = query_engine.query(prompt)
         print(response)
 
 
