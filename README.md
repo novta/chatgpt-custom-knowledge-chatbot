@@ -51,3 +51,5 @@ This project was created by Robin de Koster. You can find me on GitHub at [@robi
 Give this project a ⭐ if you find it useful! Your support is greatly appreciated.
 
 Feel free to reach out with any questions or suggestions, and don't forget to share your own amazing projects using ChatGPT Custom Knowledge Chatbot!
+
+PS E:\chatgpt-custom-knowledge-chatbot> .\myenv\Scripts\activate

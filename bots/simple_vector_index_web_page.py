@@ -1,6 +1,13 @@
-from llama_index import GPTVectorStoreIndex, ServiceContext, Document
+from llama_index import GPTVectorStoreIndex, Settings, Document
 from llama_index.readers.web import SimpleWebPageReader
 from llama_index import StorageContext, load_index_from_storage
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core.node_parser import SentenceSplitter
+import os 
+from apikey import apikey 
+
+os.environ['OPENAI_API_KEY'] = apikey
 
 def load_knowledge() -> list[Document]:
     # Load data from directory
@@ -14,8 +21,12 @@ def create_index() -> GPTVectorStoreIndex:
     # Load data
     documents = load_knowledge()
     # Create index from documents
-    service_context = ServiceContext.from_defaults(chunk_size_limit=3000)
-    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
+    Settings.llm = OpenAI(model="gpt-4o-mini")
+    Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small", dimensions=1536)
+    Settings.node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=20)
+    Settings.num_output = 512
+    Settings.context_window = 3900
+    index = GPTVectorStoreIndex.from_documents(documents)
     save_index(index)
     return index
 
